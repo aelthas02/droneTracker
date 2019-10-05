@@ -16,7 +16,7 @@
             <div><b>Average Speed:</b> {{registers.average_speed}} m/h</div>
             <div><b>Fly:</b> {{registers.fly}} %</div>
             <div class="row">
-                  <div class="name-container"><b>Status</b></div>
+                  <div class="name-container"><b>Status: </b></div>
                   <div v-if="registers.status === 'failed'">
                         <button class="btn btn-danger">{{registers.status}}</button>
                   </div>
@@ -36,7 +36,6 @@
 </template>
 <script>
 export default {
-      name: 'details',
       data() {
             return {
                   registers: [],
@@ -65,6 +64,7 @@ export default {
       font-size: 12px;
 }
 .name-container {
+      margin-top: 5px;
       margin-left: 15px;
 }
 .name {

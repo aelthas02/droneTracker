@@ -82,7 +82,7 @@ export default {
     },
 
     fieldChecking(url){
-      if (this.ID === undefined || this.NAME === undefined || this.FLYING === '' || this.STATUS === undefined){
+      if (this.ID !== undefined || this.NAME !== undefined || this.FLYING !== '' || this.STATUS !== undefined){
         url += '?';
       }
       if (this.ID !== undefined) {
@@ -116,7 +116,7 @@ export default {
 
     },
     getGeneral() { 
-      var url = this.fieldChecking('http://services.solucx.com.br/mock/drones') + this.PAGING;
+      var url = this.fieldChecking('http://services.solucx.com.br/mock/drones?') + this.PAGING;
       fetch(url, {
           mode: 'cors',
           method: 'get'
@@ -141,8 +141,9 @@ export default {
         .then((jsonData) => {
           this.registers = jsonData;
           this.getStatus();          
+        }).then(() => {
+          this.getInitialPage();
         })
-      this.getInitialPage();
     },
     getStatus(){      
       for(var i = 0; i < this.registers.length; i++){

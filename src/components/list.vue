@@ -12,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-        <tr :key="register" v-for="register in filteredRegister">
+        <tr :key="index" v-for="(register, index) in filteredRegister">
           <td><router-link :to="{name: 'details', params: {id: register.id}}">{{register.id}}</router-link></td>
           <td class='row'>
             <router-link :to="{name: 'details', params: {id: register.id}}">
