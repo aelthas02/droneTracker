@@ -48,17 +48,9 @@ export default {
   },
 
   methods: {
-    getInitialPage(){
-      fetch('http://services.solucx.com.br/mock/drones?_page=' + this.page + '&_limit=10', {
-          mode: 'cors',
-          method: 'get'
-        })
-        .then((response) => {
-          return response.json();
-        })
-        .then((jsonData) => {
-          this.registers = jsonData;
-        })
+    async getInitialPage(){
+      let response = await fetch('http://services.solucx.com.br/mock/drones?_page=' + this.page + '&_limit=10', {mode: 'cors', method: 'get'});
+      this.registers = await response.json();
       this.checkPage();
     },
 
@@ -86,10 +78,10 @@ export default {
         url += '?';
       }
       if (this.ID !== undefined) {
-        url += '&id=' + this.ID;
+        url += '&id_like=' + this.ID;
       }   
       if (this.NAME !== undefined) {
-        url += '&name=' + this.NAME;
+        url += '&name_like=^' + this.NAME;
       }   
       if (this.FLYING !== '') {
         url +=  this.FLYING;
@@ -100,50 +92,28 @@ export default {
       return url;
     },
     
-    getRegistersCount() { 
+    async getRegistersCount() { 
       var url = this.fieldChecking('http://services.solucx.com.br/mock/drones');
-      fetch(url, {
-          mode: 'cors',
-          method: 'get'
-        })
-        .then((response) => {
-          return response.json();
-        })
-        .then((jsonData) => {
-          this.registerCounter = jsonData.length;
-          jsonData.length - (this.page * 10) <= 0 ? this.$refs.next.disabled = true : this.$refs.next.disabled = false;
-        })
+
+      let response = await fetch(url, {mode: 'cors', method: 'get'});
+      let jsonData = await response.json();
+      this.registerCounter = jsonData.length;
+
+      this.registerCounter - (this.page * 10) <= 0 ? this.$refs.next.disabled = true : this.$refs.next.disabled = false;
 
     },
-    getGeneral() { 
+    async getGeneral() { 
       var url = this.fieldChecking('http://services.solucx.com.br/mock/drones?') + this.PAGING;
-      fetch(url, {
-          mode: 'cors',
-          method: 'get'
-        })
-        .then((response) => {
-          return response.json();
-        })
-        .then((jsonData) => {
-          this.registers = jsonData;
-        })
+      let response = await fetch(url, {mode: 'cors', method: 'get'});
+      this.registers = await response.json();
 
       this.checkPage();
     },
-    getList(){
-      fetch('http://services.solucx.com.br/mock/drones', {
-          mode: 'cors',
-          method: 'get'
-        })
-        .then((response) => {
-          return response.json();
-        })
-        .then((jsonData) => {
-          this.registers = jsonData;
-          this.getStatus();          
-        }).then(() => {
-          this.getInitialPage();
-        })
+    async getList(){
+      let response = await fetch('http://services.solucx.com.br/mock/drones', {mode: 'cors', method: 'get'});
+      this.registers = await response.json(); 
+      await this.getStatus();
+      this.getInitialPage();
     },
     getStatus(){      
       for(var i = 0; i < this.registers.length; i++){
@@ -155,20 +125,22 @@ export default {
     },
 
     getFilteredId(id) {
+      this.page = 1;
       if(id.length === 0) { 
         this.ID = undefined; 
       } else {
         this.ID = id;
       }
-      this.getGeneral();
+      this.setPage();
     },
     getFilteredName(name) {
+      this.page = 1;
       if(name.length === 0) { 
         this.NAME = undefined; 
       } else {
         this.NAME = name;
       }
-      this.getGeneral();
+      this.setPage();
     },
     getFilteredStatus(status) {
       this.page = 1;

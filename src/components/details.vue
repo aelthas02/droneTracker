@@ -42,17 +42,9 @@ export default {
                   id: this.$route.params.id
             }
       },
-      mounted: function() {
-            fetch('http://services.solucx.com.br/mock/drones/'+ this.id, {
-            method: 'get'
-            })
-            .then((response) => {
-            return response.json();
-            })
-            .then((jsonData) => {
-            this.registers = jsonData;
-            })
-            
+      mounted: async function() {
+            let response = await fetch('http://services.solucx.com.br/mock/drones/'+ this.id, {method: 'get'});
+            this.registers = await response.json();            
       }
 }
 </script>
