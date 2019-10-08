@@ -3,13 +3,13 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col">Drone</th>
-        <th scope="col">Customer</th>
-        <th scope="col">Batteries</th>
-        <th scope="col">Max Speed</th>
-        <th scope="col">Avarage Speed</th>
-        <th scope="col">Current Fly</th>
-        <th scope="col">Status</th>
+        <th scope="col" @click="setSortId()"><div class="sort">Drone</div></th>
+        <th scope="col" @click="setSortName()"><div class="sort">Customer</div></th>
+        <th scope="col" @click="setSortBattery()"><div class="sort">Batteries</div></th>
+        <th scope="col" @click="setSortMaxSpeed()"><div class="sort">Max Speed</div></th>
+        <th scope="col" @click="setSortAverageSpeed()"><div class="sort">Avarage Speed</div></th>
+        <th scope="col" @click="setSortCurrentFly()"><div class="sort">Current Fly</div></th>
+        <th scope="col" @click="setSortStatus()"><div class="sort">Status</div></th>
       </tr>
     </thead>
     <tbody>
@@ -92,10 +92,68 @@ import Route from 'vue-router'
 @Component
 export default class List extends Vue {
   @Prop() filteredRegister: any;  
+
+  public sortId = true;
+  public sortName = true;
+  public sortBattery = true;
+  public sortMaxSpeed = true;
+  public sortAverageSpeed = true;
+  public sortCurrentFly = true;
+  public sortStatus = true;
+
+  setAllTrue() {
+    this.sortId = true;
+    this.sortName = true;
+    this.sortBattery = true;
+    this.sortMaxSpeed = true;
+    this.sortAverageSpeed = true;
+    this.sortCurrentFly = true;
+    this.sortStatus = true;
+  }
+  setSortId() {
+    this.sortId = !this.sortId;
+    this.sortId === true ? this.$emit('setSort','&_sort=id&_order=asc') : this.$emit('setSort','&_sort=id&_order=desc');
+  }
+  setSortName() {
+    this.sortName = !this.sortName;
+    this.sortName === true ? this.$emit('setSort','&_sort=name&_order=asc') : this.$emit('setSort','&_sort=name&_order=desc');
+  }
+  setSortBattery() {
+    this.sortBattery = !this.sortBattery;
+    this.sortBattery === true ? this.$emit('setSort','&_sort=battery&_order=asc') : this.$emit('setSort','&_sort=battery&_order=desc');
+  }
+  setSortMaxSpeed() {
+    this.sortMaxSpeed = !this.sortMaxSpeed;
+    this.sortMaxSpeed === true ? this.$emit('setSort','&_sort=max_speed&_order=asc') : this.$emit('setSort','&_sort=max_speed&_order=desc');
+  }
+  setSortAverageSpeed() {
+    this.sortAverageSpeed = !this.sortAverageSpeed;
+    this.sortAverageSpeed === true ? this.$emit('setSort','&_sort=average_speed&_order=asc') : this.$emit('setSort','&_sort=average_speed&_order=desc');
+  }
+  setSortCurrentFly() {
+    this.sortCurrentFly = !this.sortCurrentFly;
+    this.sortCurrentFly === true ? this.$emit('setSort','&_sort=fly&_order=asc') : this.$emit('setSort','&_sort=fly&_order=desc');
+  }
+  setSortStatus() {
+    this.sortStatus = !this.sortStatus;
+    this.sortStatus === true ? this.$emit('setSort','&_sort=status&_order=asc') : this.$emit('setSort','&_sort=status&_order=desc');
+  }
 }
 </script>
 
 <style scoped lang="scss">
+th {
+  cursor: pointer;
+}
+.sort{
+  padding: 5px;
+  text-align: center;
+}
+.sort:hover {
+  background-color: #CCC;
+  border-radius: 5px;
+}
+
 .status {
   cursor: default;
   border-radius: 10px;

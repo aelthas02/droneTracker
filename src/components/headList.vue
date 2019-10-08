@@ -1,8 +1,13 @@
 <template>
   <div class="container">
-    <Header :filteredStatus="status" v-on:searchId="getFilteredId($event)" v-on:searchFlying="getFilteredFlying($event)" v-on:searchStatus="getFilteredStatus($event)" v-on:searchName="getFilteredName($event)"/>
+    <Header :filteredStatus="status" 
+            v-on:searchId="getFilteredId($event)" 
+            v-on:searchFlying="getFilteredFlying($event)" 
+            v-on:searchStatus="getFilteredStatus($event)" 
+            v-on:searchName="getFilteredName($event)"/>
     <br />
-    <List :filteredRegister="registers"/>
+    <List :filteredRegister="registers" 
+          v-on:setSort="setSort($event)"/>
 
     <hr>
 
@@ -40,6 +45,7 @@ export default class headList extends Vue {
   public FLYING = '';
   public STATUS = undefined;
   public PAGING = '&_page=1&_limit=10';
+  public SORT = undefined; 
 
   $refs!: {
     previous: HTMLFormElement,
@@ -57,7 +63,8 @@ export default class headList extends Vue {
   }
 
   setPage() {
-    this.PAGING = '&_page='+ this.page + '&_limit=10';
+    this.page = 1;
+    this.PAGING = '&_page=1&_limit=10';
     this.getGeneral();
   }
   previous() {
@@ -104,12 +111,11 @@ export default class headList extends Vue {
     this.registerCounter - (this.page * 10) <= 0 ? this.$refs.next.disabled = true : this.$refs.next.disabled = false;
 
   }
-  async getGeneral() { 
-    var url = this.fieldChecking('http://services.solucx.com.br/mock/drones?') + this.PAGING;
+  async getGeneral() {
+    this.checkPage();
+    var url = this.fieldChecking('http://services.solucx.com.br/mock/drones?') + this.PAGING + this.SORT;
     let response = await fetch(url, {mode: 'cors', method: 'get'});
     this.registers = await response.json();
-
-    this.checkPage();
   }
   async getList(){
     let response = await fetch('http://services.solucx.com.br/mock/drones', {mode: 'cors', method: 'get'});
@@ -127,8 +133,12 @@ export default class headList extends Vue {
     this.registers = [];
   }
 
+  setSort(sort: any){
+    this.SORT = sort;
+    this.setPage();
+  }
+
   getFilteredId(id: any) {
-    this.page = 1;
     if(id.length === 0) { 
       this.ID = undefined; 
     } else {
@@ -137,7 +147,6 @@ export default class headList extends Vue {
     this.setPage();
   }
   getFilteredName(name: any) {
-    this.page = 1;
     if(name.length === 0) { 
       this.NAME = undefined; 
     } else {
@@ -146,7 +155,6 @@ export default class headList extends Vue {
     this.setPage();
   }
   getFilteredStatus(status: any) {
-    this.page = 1;
     if(status.length === 0) { 
       this.STATUS = undefined; 
     } else {
@@ -156,7 +164,6 @@ export default class headList extends Vue {
   }
   getFilteredFlying(flying: any) {
     this.FLYING = '';
-    this.page = 1;
 
     if(flying == 0) { 
       this.FLYING = '&fly=' + 0; 
