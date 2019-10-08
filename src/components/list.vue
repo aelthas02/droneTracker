@@ -3,13 +3,13 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col" @click="setSortId()"><div class="sort">Drone</div></th>
-        <th scope="col" @click="setSortName()"><div class="sort">Customer</div></th>
-        <th scope="col" @click="setSortBattery()"><div class="sort">Batteries</div></th>
-        <th scope="col" @click="setSortMaxSpeed()"><div class="sort">Max Speed</div></th>
-        <th scope="col" @click="setSortAverageSpeed()"><div class="sort">Avarage Speed</div></th>
-        <th scope="col" @click="setSortCurrentFly()"><div class="sort">Current Fly</div></th>
-        <th scope="col" @click="setSortStatus()"><div class="sort">Status</div></th>
+        <th scope="col"><div @click="setSortId()" class="sort">Drone</div></th>
+        <th scope="col"><div @click="setSortName()" class="sort">Customer</div></th>
+        <th scope="col"><div @click="setSortBattery()" class="sort">Batteries</div></th>
+        <th scope="col"><div @click="setSortMaxSpeed()" class="sort">Max Speed</div></th>
+        <th scope="col"><div @click="setSortAverageSpeed()" class="sort">Avarage Speed</div></th>
+        <th scope="col"><div @click="setSortCurrentFly()" class="sort">Current Fly</div></th>
+        <th scope="col"><div @click="setSortStatus()" class="sort">Status</div></th>
       </tr>
     </thead>
     <tbody>
@@ -142,10 +142,8 @@ export default class List extends Vue {
 </script>
 
 <style scoped lang="scss">
-th {
-  cursor: pointer;
-}
 .sort{
+  cursor: pointer;
   padding: 5px;
   text-align: center;
 }
