@@ -1,5 +1,6 @@
 <template>
-  <table class="table">
+<div class="table-responsive-lg">
+  <table class="table table-striped">
     <thead>
       <tr>
         <th scope="col">Drone</th>
@@ -81,6 +82,7 @@
         </tr>
     </tbody>
   </table>
+  </div>
 </template>
 
 <script>
@@ -123,6 +125,9 @@ a {
   background-color: black;
   border: solid black 1px;
   border-radius: 20px;
+}
+.direction-container {
+  position: relative;
 }
 .direction-container:hover .direction {
   opacity: 1;
