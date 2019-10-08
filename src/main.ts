@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
-import Details from './components/details';
-import HeadList from './components/headList';
+import Details from './components/details.vue';
+import HeadList from './components/headList.vue';
 import VueRouter from 'vue-router';
 import 'jquery';
 import 'bootstrap';

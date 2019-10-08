@@ -34,17 +34,23 @@
             </div>
       </div>
 </template>
-<script>
-export default {
-      data() {
-            return {
-                  registers: [],
-                  id: this.$route.params.id
-            }
-      },
-      mounted: async function() {
+
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import Route from 'vue-router'
+
+@Component
+export default class Details extends Vue {
+      public registers = [];
+      public id: any;
+      
+      created() {
+            this.id = this.$route.params.id;
+            this.Test();           
+      }
+      async Test(){
             let response = await fetch('http://services.solucx.com.br/mock/drones/'+ this.id, {method: 'get'});
-            this.registers = await response.json();            
+            this.registers = await response.json(); 
       }
 }
 </script>

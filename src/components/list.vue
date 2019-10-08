@@ -85,13 +85,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import Route from 'vue-router'
 
-export default {
-  name: 'List',
-  props: {
-    filteredRegister: Array
-  }
+@Component
+export default class List extends Vue {
+  @Prop() filteredRegister: any;  
 }
 </script>
 

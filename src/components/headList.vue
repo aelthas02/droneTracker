@@ -18,161 +18,164 @@
   </div>
 </template>
 
-<script>
+<script lang='ts'>
 import Header from './header.vue'
 import List from './list.vue'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import Route from 'vue-router'
 
-export default {
-  name: 'headList',
+@Component({
   components: {
     Header,
     List
-  },
-
-  data() {
-    return {
-      registers: [],
-      registerCounter: 0,
-      status: [],
-      page: 1,
-      ID: undefined,
-      NAME: undefined,
-      FLYING: '',
-      STATUS: undefined,
-      PAGING: '&_page=1&_limit=10'
-    }
-  },
-
-  mounted: function(){
-    this.getList();
-  },
-
-  methods: {
-    async getInitialPage(){
-      let response = await fetch('http://services.solucx.com.br/mock/drones?_page=' + this.page + '&_limit=10', {mode: 'cors', method: 'get'});
-      this.registers = await response.json();
-      this.checkPage();
-    },
-
-    setPage() {
-      this.PAGING = '&_page='+ this.page + '&_limit=10';
-      this.getGeneral();
-    },
-    previous() {
-      this.page--;
-      this.PAGING = '&_page='+ this.page + '&_limit=10';
-      this.getGeneral();
-    },
-    next() {
-      this.page++;
-      this.PAGING = '&_page='+ this.page + '&_limit=10';
-      this.getGeneral();
-    },
-    checkPage() {
-      this.getRegistersCount();
-      this.page === 1 ? this.$refs.previous.disabled = true : this.$refs.previous.disabled = false;
-    },
-
-    fieldChecking(url){
-      if (this.ID !== undefined || this.NAME !== undefined || this.FLYING !== '' || this.STATUS !== undefined){
-        url += '?';
-      }
-      if (this.ID !== undefined) {
-        url += '&id_like=' + this.ID;
-      }   
-      if (this.NAME !== undefined) {
-        url += '&name_like=^' + this.NAME;
-      }   
-      if (this.FLYING !== '') {
-        url +=  this.FLYING;
-      }   
-      if (this.STATUS !== undefined) {
-        url += '&status=' + this.STATUS;
-      }
-      return url;
-    },
-    
-    async getRegistersCount() { 
-      var url = this.fieldChecking('http://services.solucx.com.br/mock/drones');
-
-      let response = await fetch(url, {mode: 'cors', method: 'get'});
-      let jsonData = await response.json();
-      this.registerCounter = jsonData.length;
-
-      this.registerCounter - (this.page * 10) <= 0 ? this.$refs.next.disabled = true : this.$refs.next.disabled = false;
-
-    },
-    async getGeneral() { 
-      var url = this.fieldChecking('http://services.solucx.com.br/mock/drones?') + this.PAGING;
-      let response = await fetch(url, {mode: 'cors', method: 'get'});
-      this.registers = await response.json();
-
-      this.checkPage();
-    },
-    async getList(){
-      let response = await fetch('http://services.solucx.com.br/mock/drones', {mode: 'cors', method: 'get'});
-      this.registers = await response.json(); 
-      await this.getStatus();
-      this.getInitialPage();
-    },
-    getStatus(){      
-      for(var i = 0; i < this.registers.length; i++){
-        if(this.status.indexOf(this.registers[i].status) === -1){
-          this.status.push(this.registers[i].status);
-        }
-      }
-      this.registers = [];
-    },
-
-    getFilteredId(id) {
-      this.page = 1;
-      if(id.length === 0) { 
-        this.ID = undefined; 
-      } else {
-        this.ID = id;
-      }
-      this.setPage();
-    },
-    getFilteredName(name) {
-      this.page = 1;
-      if(name.length === 0) { 
-        this.NAME = undefined; 
-      } else {
-        this.NAME = name;
-      }
-      this.setPage();
-    },
-    getFilteredStatus(status) {
-      this.page = 1;
-      if(status.length === 0) { 
-        this.STATUS = undefined; 
-      } else {
-        this.STATUS = status;
-      }
-      this.setPage();
-    },
-    getFilteredFlying(flying) {
-      this.FLYING = '';
-      this.page = 1;
-
-      if(flying == 0) { 
-        this.FLYING = '&fly=' + 0; 
-      }else if (flying == 1) {
-        for (var i = 1; i < 51; i++) {
-          this.FLYING += '&fly=' + i;
-        }
-      }else if (flying == 2) {
-        for (var j = 51; j < 101; j++) {
-          this.FLYING += '&fly=' + j;
-        }
-      }else {
-        for (var k = 0; k < 101; k++) {
-          this.FLYING += '&fly=' + k;
-        }
-      }
-      this.setPage();
-    }
   }
+})
+export default class headList extends Vue {
+  public registers: any = [];
+  public registerCounter = 0;
+  public status: any = [];
+  public page = 1;
+  public ID = undefined;
+  public NAME = undefined;
+  public FLYING = '';
+  public STATUS = undefined;
+  public PAGING = '&_page=1&_limit=10';
+
+  $refs!: {
+    previous: HTMLFormElement,
+    next: HTMLFormElement
+  }  
+
+  created() { 
+    this.getList();
+  }  
+
+  async getInitialPage(){
+    let response = await fetch('http://services.solucx.com.br/mock/drones?_page=' + this.page + '&_limit=10', {mode: 'cors', method: 'get'});
+    this.registers = await response.json();
+    this.checkPage();
+  }
+
+  setPage() {
+    this.PAGING = '&_page='+ this.page + '&_limit=10';
+    this.getGeneral();
+  }
+  previous() {
+    this.page--;
+    this.PAGING = '&_page='+ this.page + '&_limit=10';
+    this.getGeneral();
+  }
+  next() {
+    this.page++;
+    this.PAGING = '&_page='+ this.page + '&_limit=10';
+    this.getGeneral();
+  }
+  checkPage() {
+    this.getRegistersCount();
+    this.page === 1 ? this.$refs.previous.disabled = true : this.$refs.previous.disabled = false;
+  }
+
+  fieldChecking(url: any){
+    if (this.ID !== undefined || this.NAME !== undefined || this.FLYING !== '' || this.STATUS !== undefined){
+      url += '?';
+    }
+    if (this.ID !== undefined) {
+      url += '&id_like=' + this.ID;
+    }   
+    if (this.NAME !== undefined) {
+      url += '&name_like=^' + this.NAME;
+    }   
+    if (this.FLYING !== '') {
+      url +=  this.FLYING;
+    }   
+    if (this.STATUS !== undefined) {
+      url += '&status=' + this.STATUS;
+    }
+    return url;
+  }
+  
+  async getRegistersCount() { 
+    var url = this.fieldChecking('http://services.solucx.com.br/mock/drones');
+
+    let response = await fetch(url, {mode: 'cors', method: 'get'});
+    let jsonData = await response.json();
+    this.registerCounter = jsonData.length;
+
+    this.registerCounter - (this.page * 10) <= 0 ? this.$refs.next.disabled = true : this.$refs.next.disabled = false;
+
+  }
+  async getGeneral() { 
+    var url = this.fieldChecking('http://services.solucx.com.br/mock/drones?') + this.PAGING;
+    let response = await fetch(url, {mode: 'cors', method: 'get'});
+    this.registers = await response.json();
+
+    this.checkPage();
+  }
+  async getList(){
+    let response = await fetch('http://services.solucx.com.br/mock/drones', {mode: 'cors', method: 'get'});
+    this.registers = await response.json(); 
+    await this.getStatus();
+    this.getInitialPage();
+  }
+  getStatus(){    
+    for(var i = 0; i < this.registers.length; i++){
+      if(this.status.indexOf(this.registers[i].status) === -1){
+        this.status.push(this.registers[i].status);
+      }    
+    }
+    
+    this.registers = [];
+  }
+
+  getFilteredId(id: any) {
+    this.page = 1;
+    if(id.length === 0) { 
+      this.ID = undefined; 
+    } else {
+      this.ID = id;
+    }
+    this.setPage();
+  }
+  getFilteredName(name: any) {
+    this.page = 1;
+    if(name.length === 0) { 
+      this.NAME = undefined; 
+    } else {
+      this.NAME = name;
+    }
+    this.setPage();
+  }
+  getFilteredStatus(status: any) {
+    this.page = 1;
+    if(status.length === 0) { 
+      this.STATUS = undefined; 
+    } else {
+      this.STATUS = status;
+    }
+    this.setPage();
+  }
+  getFilteredFlying(flying: any) {
+    this.FLYING = '';
+    this.page = 1;
+
+    if(flying == 0) { 
+      this.FLYING = '&fly=' + 0; 
+    }else if (flying == 1) {
+      for (var i = 1; i < 51; i++) {
+        this.FLYING += '&fly=' + i;
+      }
+    }else if (flying == 2) {
+      for (var j = 51; j < 101; j++) {
+        this.FLYING += '&fly=' + j;
+      }
+    }else {
+      for (var k = 0; k < 101; k++) {
+        this.FLYING += '&fly=' + k;
+      }
+    }
+    this.setPage();
+  }
+  
 }
 </script>
 

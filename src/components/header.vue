@@ -33,27 +33,34 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import Route from 'vue-router'
 
-export default {
-  name: 'Header',
-  props: {
-    filteredStatus: Array
-  },
-  methods: {
-    searchId(){
-      this.$emit('searchId', this.$refs.id.value);
-    },
-    searchName() {
-      this.$emit('searchName', this.$refs.name.value);
-    },
-    searchFlying() {
-      this.$emit('searchFlying', this.$refs.flying.value);
-    },
-    searchStatus() {
-      this.$emit('searchStatus', this.$refs.status.value);
-    }
+@Component
+export default class Header extends Vue {
+  @Prop() filteredStatus: any;
+
+  $refs!: {
+    id: HTMLFormElement,
+    name: HTMLFormElement,
+    flying: HTMLFormElement,
+    status: HTMLFormElement
   }
+
+  searchId(){
+    this.$emit('searchId', this.$refs.id.value);
+  }
+  searchName() {
+    this.$emit('searchName', this.$refs.name.value);
+  }
+  searchFlying() {
+    this.$emit('searchFlying', this.$refs.flying.value);
+  }
+  searchStatus() {
+    this.$emit('searchStatus', this.$refs.status.value);
+  }
+  
 }
 </script>
 
